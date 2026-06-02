@@ -1197,7 +1197,7 @@
   
   <div class="badges-row">
     <span class="badge-tag"><span class="badge-icon">📍</span> Turmero / Maracay</span>
-    <span class="badge-tag"><span class="badge-icon">🛵</span> Delivery Activo</span>
+    <span class="badge-tag"><span class="badge-icon">🛵</span> Delivery según zona</span>
     <span class="badge-tag"><span class="badge-icon">💳</span> Pago Móvil · Bancamiga</span>
   </div>
 </header>
@@ -1238,7 +1238,7 @@
         <div class="step-num">3</div>
         <div class="step-text">
           <h4>Envía por WhatsApp</h4>
-          <p>Se generará el mensaje listo. ¡Te confirmamos en minutos!</p>
+          <p>Se generará el mensaje listo. ¡Te confirmamos el costo del delivery según tu zona!</p>
         </div>
       </div>
     </div>
@@ -1362,6 +1362,9 @@
     <div class="total">
       <span>Total</span>
       <b id="sheetTotal">$0</b>
+    </div>
+    <div style="font-size:12px; color:#666; text-align:right; margin-top:2px; font-weight:600; font-family:'Inter',sans-serif;">
+      *Costo de delivery varía según la zona (no incluido)
     </div>
     <button class="send" onclick="sendWhatsApp()">Enviar por WhatsApp 📱</button>
     <button class="clear" onclick="clearCart()">Vaciar pedido</button>
@@ -1755,6 +1758,7 @@ function sendWhatsApp(){
     msg += `  Subtotal: $${(item.qty * item.price).toFixed(0)} / Bs. ${subtotalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n\n`;
   });
   msg += `*Total a pagar: $${total.toFixed(0)} / Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}*\n`;
+  msg += `_(No incluye delivery, varía según la zona)_\n`;
   msg += `_Tasa Oficial BCV del día: Bs. ${tasaBCV.toFixed(2)}_\n\n`;
   msg += `*Datos de Entrega:*\n`;
   msg += `- *Nombre:* \n`;
