@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Crumpizza — Historias de Menú (1080x1920)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: 1080px 1920px;
+    margin: 0;
+  }
+  :root {
+    --rojo: #E63027;
+    --amarillo: #ffce2e;
+    --naranja: #ff7a1a;
+    --negro: #0a0a0a;
+    --carbon: #0c0908;
+    --carbon-card: #1f1917;
+    --crema: #f6efe3;
+    --crema-2: #ece4d3;
+    --crema-text: #fdfaf5;
+    --muted: #a89f95;
+    
+    --borde: 4px solid var(--negro);
+    --sombra: 8px 8px 0px var(--negro);
+    --sombra-small: 5px 5px 0px var(--negro);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #333;
+    font-family: 'Inter', sans-serif;
+    color: var(--crema-text);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 40px 0;
+  }
+
+  /* ==================== PAGE TEMPLATE ==================== */
+  .story-page {
+    width: 1080px;
+    height: 1920px;
+    background-color: var(--carbon);
+    background-image: 
+      radial-gradient(rgba(230, 48, 39, 0.2) 1.5px, transparent 0),
+      radial-gradient(rgba(255, 206, 46, 0.04) 1.2px, transparent 0);
+    background-size: 32px 32px;
+    background-position: 0 0, 16px 16px;
+    border: 8px solid var(--negro);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 80px 60px 100px;
+  }
+
+  /* Decorative stripes on bottom */
+  .story-page::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 16px;
+    background-image: repeating-linear-gradient(-45deg, var(--amarillo) 0, var(--amarillo) 15px, var(--negro) 15px, var(--negro) 30px);
+    border-top: 4px solid var(--negro);
+  }
+
+  /* ==================== HEADER ==================== */
+  .header {
+    text-align: center;
+    margin-bottom: 70px;
+    position: relative;
+  }
+
+  .logo-sticker {
+    background: #fff;
+    border: var(--borde);
+    padding: 15px 45px;
+    border-radius: 18px;
+    transform: rotate(-3deg);
+    box-shadow: var(--sombra);
+    display: inline-block;
+    margin-bottom: 25px;
+  }
+
+  .logo-crum {
+    font-family: 'Anton', sans-serif;
+    font-size: 58px;
+    color: var(--negro);
+    letter-spacing: 2px;
+    line-height: 0.85;
+    display: block;
+  }
+
+  .logo-pizza {
+    font-family: 'Anton', sans-serif;
+    font-size: 58px;
+    color: var(--rojo);
+    letter-spacing: 2px;
+    line-height: 0.85;
+    display: block;
+  }
+
+  .slogan {
+    font-family: 'Caveat', cursive;
+    font-size: 34px;
+    color: var(--amarillo);
+    margin-top: 5px;
+    transform: rotate(2deg);
+    display: inline-block;
+  }
+
+  /* ==================== TITLE BANNER ==================== */
+  .title-banner {
+    background: var(--rojo);
+    color: #fff;
+    border: var(--borde);
+    padding: 12px 30px;
+    font-family: 'Anton', sans-serif;
+    font-size: 42px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    box-shadow: var(--sombra-small);
+    width: fit-content;
+    margin: 0 auto 50px;
+    transform: rotate(-1.5deg);
+    text-align: center;
+  }
+
+  .title-banner span {
+    color: var(--amarillo);
+  }
+
+  /* ==================== CONTENT LAYOUT ==================== */
+  .menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    flex-grow: 1;
+  }
+
+  .menu-card {
+    background: var(--carbon-card);
+    border: var(--borde);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--sombra);
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .menu-card.featured {
+    border-color: var(--amarillo);
+    box-shadow: 6px 6px 0px var(--amarillo), var(--sombra);
+  }
+
+  .card-left {
+    flex: 1;
+    padding-right: 20px;
+  }
+
+  .card-badge {
+    font-family: 'Anton', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border: 2px solid var(--negro);
+    border-radius: 8px;
+    width: fit-content;
+    margin-bottom: 12px;
+    box-shadow: 2px 2px 0 var(--negro);
+  }
+
+  .badge-yellow { background: var(--amarillo); color: var(--negro); }
+  .badge-red { background: var(--rojo); color: #fff; }
+  .badge-orange { background: var(--naranja); color: #fff; }
+
+  .item-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 34px;
+    letter-spacing: 1.5px;
+    color: #fff;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .item-desc {
+    font-size: 19px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .card-right {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .item-price {
+    font-family: 'Anton', sans-serif;
+    font-size: 52px;
+    color: var(--amarillo);
+    text-shadow: 3px 3px 0 var(--negro);
+    line-height: 1;
+  }
+
+  .item-price small {
+    font-size: 26px;
+    color: #fff;
+    vertical-align: top;
+    margin-right: 2px;
+  }
+
+  /* Size table inside card (Clásicas) */
+  .sizes-grid {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .size-box {
+    flex: 1;
+    background: var(--carbon);
+    border: 3px solid var(--negro);
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+    box-shadow: 3px 3px 0 var(--negro);
+  }
+
+  .size-box .sz-name {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .size-box .sz-price {
+    display: block;
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    color: var(--crema-text);
+  }
+
+  .size-box.highlight {
+    background: var(--amarillo);
+    color: var(--negro);
+  }
+  .size-box.highlight .sz-name {
+    color: rgba(0,0,0,0.6);
+  }
+  .size-box.highlight .sz-price {
+    color: var(--negro);
+  }
+
+  /* Grid layout for promos */
+  .promos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  .promo-item {
+    background: var(--carbon-card);
+    border: var(--borde);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--sombra-small);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 310px;
+  }
+
+  .promo-item-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: #fff;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .promo-item-desc {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.45;
+    margin-bottom: 15px;
+    flex-grow: 1;
+  }
+
+  .promo-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+  }
+
+  .promo-price {
+    font-family: 'Anton', sans-serif;
+    font-size: 34px;
+    color: var(--amarillo);
+  }
+  .promo-price small {
+    font-size: 18px;
+    color: #fff;
+    vertical-align: top;
+  }
+
+  /* Postres & Pago Móvil Grid */
+  .postres-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 30px;
+    margin-bottom: 40px;
+  }
+
+  .postre-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px dotted #3a2a20;
+    padding-bottom: 12px;
+  }
+
+  .postre-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--crema-text);
+  }
+
+  .postre-price {
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    color: var(--amarillo);
+  }
+
+  .pm-story-card {
+    background: var(--carbon-card);
+    border: var(--borde);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--sombra);
+    margin-top: 30px;
+    position: relative;
+  }
+
+  .pm-story-title {
+    position: absolute;
+    top: -16px; left: 30px;
+    background: var(--amarillo);
+    color: var(--negro);
+    border: 2px solid var(--negro);
+    padding: 4px 16px;
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    box-shadow: 2px 2px 0 var(--negro);
+  }
+
+  .pm-story-card p {
+    font-size: 22px;
+    margin: 12px 0;
+    color: var(--crema-2);
+  }
+  .pm-story-card p b {
+    color: var(--amarillo);
+  }
+
+  /* ==================== FOOTER ==================== */
+  .footer {
+    margin-top: auto;
+    border-top: var(--borde);
+    padding-top: 35px;
+    text-align: center;
+  }
+
+  .cta-badge {
+    background: #25D366;
+    color: #fff;
+    border: var(--borde);
+    padding: 12px 30px;
+    border-radius: 999px;
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--sombra-small);
+  }
+
+  .footer-subtext {
+    font-family: 'Caveat', cursive;
+    color: var(--muted);
+    font-size: 28px;
+    margin-top: 15px;
+  }
+
+  .footer-subtext b {
+    color: var(--amarillo);
+  }
+
+  /* Print preview button helper */
+  .print-btn {
+    position: fixed;
+    top: 20px; right: 20px;
+    background: var(--rojo);
+    color: #fff;
+    border: 2px solid #000;
+    padding: 10px 20px;
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 4px 4px 0 #000;
+    border-radius: 8px;
+  }
+  .print-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #000;
+  }
+
+  @media print {
+    body {
+      background: none;
+      padding: 0;
+    }
+    .print-btn {
+      display: none;
+    }
+    .story-page {
+      page-break-after: always;
+      border: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">IMPRIMIR / GUARDAR PDF 🖨️</button>
+
+<!-- ==================== STORY 1: ESPECIALES ==================== -->
+<div class="story-page" id="page-1">
+  <div class="header">
+    <div class="logo-sticker">
+      <span class="logo-crum">CRUM</span>
+      <span class="logo-pizza">PIZZA</span>
+    </div>
+    <div>
+      <span class="slogan">¡Sabe a Gloria!</span>
+    </div>
+  </div>
+
+  <div class="title-banner">
+    ESPECIALES <span>CRUM</span>
+  </div>
+
+  <div class="menu-list">
+    <div class="menu-card featured">
+      <div class="card-left">
+        <span class="card-badge badge-yellow" style="transform:rotate(-1deg)">🍔 Héroe de Ventas</span>
+        <h3 class="item-title">Pizza Hamburguesa</h3>
+        <p class="item-desc">Masa de pizza rellena de carne molida jugosa, mozzarella, peperoni, cheddar, papas fritas y refresco 1L.</p>
+      </div>
+      <div class="card-right">
+        <div class="item-price"><small>$</small>10</div>
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <div class="card-left">
+        <span class="card-badge badge-red" style="transform:rotate(1.5deg)">👑 La de la Casa</span>
+        <h3 class="item-title">Crum Pizza</h3>
+        <p class="item-desc">Salsa, jamón, mozzarella, maíz dulce, tocineta crujiente, aceitunas negras y borde relleno de queso mozzarella.</p>
+      </div>
+      <div class="card-right">
+        <div class="item-price"><small>$</small>16</div>
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <div class="card-left">
+        <span class="card-badge badge-orange" style="transform:rotate(-1deg)">🍗 Crum Chicken</span>
+        <h3 class="item-title">Crum Chicken</h3>
+        <p class="item-desc">Salsa, jamón, mozzarella, maíz dulce, tocineta crujiente, pollo desmechado y borde relleno de queso mozzarella.</p>
+      </div>
+      <div class="card-right">
+        <div class="item-price"><small>$</small>16</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="cta-badge">Pide al WhatsApp 📱</div>
+    <div class="footer-subtext">Link directo en la BIO <b>@crumpizza</b></div>
+  </div>
+</div>
+
+
+<!-- ==================== STORY 2: CLÁSICAS ==================== -->
+<div class="story-page" id="page-2">
+  <div class="header">
+    <div class="logo-sticker">
+      <span class="logo-crum">CRUM</span>
+      <span class="logo-pizza">PIZZA</span>
+    </div>
+    <div>
+      <span class="slogan">¡Sabe a Gloria!</span>
+    </div>
+  </div>
+
+  <div class="title-banner">
+    PIZZAS <span>CLÁSICAS</span>
+  </div>
+
+  <div class="menu-list">
+    <div class="menu-card" style="flex-direction: column; align-items: stretch; gap: 15px;">
+      <div style="display:flex; justify-content:space-between; align-items: flex-start;">
+        <div>
+          <h3 class="item-title" style="margin-bottom:4px;">Margarita</h3>
+          <p class="item-desc">Nuestra salsa artesanal, jamón y queso mozzarella.</p>
+        </div>
+        <span class="card-badge badge-yellow" style="transform:rotate(-1deg)">Borde de queso incluido</span>
+      </div>
+      <div class="sizes-grid">
+        <div class="size-box">
+          <span class="sz-name">Chica 25cm</span>
+          <span class="sz-price">$5</span>
+        </div>
+        <div class="size-box">
+          <span class="sz-name">Mediana 33cm</span>
+          <span class="sz-price">$6</span>
+        </div>
+        <div class="size-box highlight">
+          <span class="sz-name">Familiar 40cm</span>
+          <span class="sz-price">$7</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-card" style="flex-direction: column; align-items: stretch; gap: 15px;">
+      <div style="display:flex; justify-content:space-between; align-items: flex-start;">
+        <div>
+          <h3 class="item-title" style="margin-bottom:4px;">Peperoni</h3>
+          <p class="item-desc">Salsa de la casa, jamón, mozzarella y abundante peperoni.</p>
+        </div>
+        <span class="card-badge badge-red" style="transform:rotate(1.5deg)">Súper Pedida</span>
+      </div>
+      <div class="sizes-grid">
+        <div class="size-box">
+          <span class="sz-name">Chica 25cm</span>
+          <span class="sz-price">$7</span>
+        </div>
+        <div class="size-box">
+          <span class="sz-name">Mediana 33cm</span>
+          <span class="sz-price">$9</span>
+        </div>
+        <div class="size-box highlight">
+          <span class="sz-name">Familiar 40cm</span>
+          <span class="sz-price">$10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-card" style="flex-direction: column; align-items: stretch; gap: 15px;">
+      <div style="display:flex; justify-content:space-between; align-items: flex-start;">
+        <div>
+          <h3 class="item-title" style="margin-bottom:4px;">Charcutera</h3>
+          <p class="item-desc">Salsa, jamón, mozzarella, peperoni, chorizo y tocineta.</p>
+        </div>
+        <span class="card-badge badge-orange" style="transform:rotate(-1deg)">Para Carnívoros</span>
+      </div>
+      <div class="sizes-grid">
+        <div class="size-box">
+          <span class="sz-name">Chica 25cm</span>
+          <span class="sz-price">$7</span>
+        </div>
+        <div class="size-box">
+          <span class="sz-name">Mediana 33cm</span>
+          <span class="sz-price">$9</span>
+        </div>
+        <div class="size-box highlight">
+          <span class="sz-name">Familiar 40cm</span>
+          <span class="sz-price">$10</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="cta-badge">Pide al WhatsApp 📱</div>
+    <div class="footer-subtext">Todas incluyen <b>Borde de Queso</b> 🧀</div>
+  </div>
+</div>
+
+
+<!-- ==================== STORY 3: PROMOS ==================== -->
+<div class="story-page" id="page-3">
+  <div class="header">
+    <div class="logo-sticker">
+      <span class="logo-crum">CRUM</span>
+      <span class="logo-pizza">PIZZA</span>
+    </div>
+    <div>
+      <span class="slogan">¡Sabe a Gloria!</span>
+    </div>
+  </div>
+
+  <div class="title-banner">
+    PROMOS <span>CRUM</span>
+  </div>
+
+  <div class="promos-grid">
+    <div class="promo-item">
+      <div>
+        <h4 class="promo-item-title">Crum Viral</h4>
+        <p class="promo-item-desc">1 Margarita 40cm + 1 ingrediente adicional + Refresco 1L.</p>
+      </div>
+      <div class="promo-footer">
+        <span class="promo-price"><small>$</small>9</span>
+        <span class="card-badge badge-yellow">Solo $9</span>
+      </div>
+    </div>
+
+    <div class="promo-item">
+      <div>
+        <h4 class="promo-item-title">Multijugador</h4>
+        <p class="promo-item-desc">2 Margaritas 40cm + 1 ingrediente adicional + Refresco 1L.</p>
+      </div>
+      <div class="promo-footer">
+        <span class="promo-price"><small>$</small>16</span>
+        <span class="card-badge badge-red">Para 2-3</span>
+      </div>
+    </div>
+
+    <div class="promo-item">
+      <div>
+        <h4 class="promo-item-title">Crum Panas</h4>
+        <p class="promo-item-desc">3 Margaritas 40cm + 1 Refresco 1L.</p>
+      </div>
+      <div class="promo-footer">
+        <span class="promo-price"><small>$</small>19</span>
+        <span class="card-badge badge-orange">Reunión</span>
+      </div>
+    </div>
+
+    <div class="promo-item">
+      <div>
+        <h4 class="promo-item-title">Random</h4>
+        <p class="promo-item-desc">2 Margaritas 40cm + 1 Pizza Charcutera 40cm + Refresco 1L.</p>
+      </div>
+      <div class="promo-footer">
+        <span class="promo-price"><small>$</small>23</span>
+        <span class="card-badge badge-yellow">Variado</span>
+      </div>
+    </div>
+
+    <div class="promo-item">
+      <div>
+        <h4 class="promo-item-title">Legendario</h4>
+        <p class="promo-item-desc">3 Pizzas Charcutera 40cm + 1 Refresco 1L.</p>
+      </div>
+      <div class="promo-footer">
+        <span class="promo-price"><small>$</small>27</span>
+        <span class="card-badge badge-red">El Favorito</span>
+      </div>
+    </div>
+
+    <div class="promo-item">
+      <div>
+        <h4 class="promo-item-title">Crum Aesthetic</h4>
+        <p class="promo-item-desc">4 Pizzas Margarita 33cm + 1 Refresco 1L.</p>
+      </div>
+      <div class="promo-footer">
+        <span class="promo-price"><small>$</small>22</span>
+        <span class="card-badge badge-orange">El de siempre</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer" style="margin-top: 50px;">
+    <div class="cta-badge">Pide al WhatsApp 📱</div>
+    <div class="footer-subtext">¡Enviamos directo a tu casa en <b>Turmero</b>!</div>
+  </div>
+</div>
+
+
+<!-- ==================== STORY 4: POSTRES & PAGO MÓVIL ==================== -->
+<div class="story-page" id="page-4">
+  <div class="header">
+    <div class="logo-sticker">
+      <span class="logo-crum">CRUM</span>
+      <span class="logo-pizza">PIZZA</span>
+    </div>
+    <div>
+      <span class="slogan">¡Sabe a Gloria!</span>
+    </div>
+  </div>
+
+  <div class="title-banner">
+    POSTRES &amp; <span>BEBIDAS</span>
+  </div>
+
+  <div class="postres-list">
+    <div class="postre-row">
+      <span class="postre-name">Marquesa</span>
+      <span class="postre-price">$4</span>
+    </div>
+    <div class="postre-row">
+      <span class="postre-name">Refresco 1L</span>
+      <span class="postre-price">$1</span>
+    </div>
+    <div class="postre-row">
+      <span class="postre-name">Quesillo</span>
+      <span class="postre-price">$4</span>
+    </div>
+    <div class="postre-row">
+      <span class="postre-name">Refresco 2L</span>
+      <span class="postre-price">$2</span>
+    </div>
+    <div class="postre-row">
+      <span class="postre-name">Torta 3 Leches</span>
+      <span class="postre-price">$4</span>
+    </div>
+    <div class="postre-row">
+      <span class="postre-name">Batidos</span>
+      <span class="postre-price">$3</span>
+    </div>
+    <div class="postre-row">
+      <span class="postre-name">Torta de Chocolate</span>
+      <span class="postre-price">$4</span>
+    </div>
+    <div class="postre-row">
+      <span class="postre-name">Agua 1L</span>
+      <span class="postre-price">$2</span>
+    </div>
+  </div>
+
+  <div class="pm-story-card">
+    <div class="pm-story-title">💳 DATOS DE PAGO MÓVIL</div>
+    <p><b>Banco:</b> Bancamiga (0172)</p>
+    <p><b>Cédula:</b> V-23796978</p>
+    <p><b>Teléfono:</b> 0412-462 48 49</p>
+  </div>
+
+  <div class="footer">
+    <div class="cta-badge">Pide al WhatsApp 📱</div>
+    <div class="footer-subtext">Nro. de WhatsApp: <b>0422-637 18 45</b></div>
+  </div>
+</div>
+
+</body>
+</html>
