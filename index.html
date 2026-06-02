@@ -1333,6 +1333,7 @@
     <p><b>Banco:</b> Bancamiga (0172)</p>
     <p><b>Cédula:</b> V-23796978</p>
     <p><b>Teléfono:</b> 0412-462 48 49</p>
+    <p id="tasaBcvDisplay"><b>Tasa BCV:</b> Bs. 45.19 (oficial)</p>
   </div>
   
   <div class="copyright">
@@ -1623,6 +1624,30 @@ document.addEventListener("click", (e)=>{
   if(b) addToCart(b);
 });
 
+let tasaBCV = 45.19; // Tasa por defecto
+
+async function obtenerTasaBCV() {
+  try {
+    const res = await fetch("https://ve.dolarapi.com/v1/dolares/oficial");
+    const data = await res.json();
+    if (data && data.promedio) {
+      tasaBCV = parseFloat(data.promedio);
+      console.log("Tasa BCV obtenida:", tasaBCV);
+      actualizarTasaDisplay();
+      renderCart();
+    }
+  } catch (err) {
+    console.error("Error al obtener tasa BCV, usando fallback:", err);
+  }
+}
+
+function actualizarTasaDisplay() {
+  const display = document.getElementById("tasaBcvDisplay");
+  if (display) {
+    display.innerHTML = `<b>Tasa BCV:</b> Bs. ${tasaBCV.toFixed(2)} (oficial)`;
+  }
+}
+
 function totals(){
   let qty = 0, total = 0;
   Object.values(cart).forEach(item=>{
@@ -1636,7 +1661,15 @@ function renderCart(){
   const { qty, total } = totals();
   const bar = document.getElementById("cartBar");
   document.getElementById("cartCount").textContent = qty;
-  document.getElementById("cartTotal").textContent = `$${total.toFixed(0)} · toca para revisar`;
+  
+  const totalBs = total * tasaBCV;
+  document.getElementById("cartTotal").innerHTML = `
+    <b>Ver pedido: $${total.toFixed(0)}</b> 
+    <span style="font-size:12px; opacity:0.85; font-weight:normal; margin-left:4px;">
+      (Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})})
+    </span>
+  `;
+  
   bar.classList.toggle("show", qty > 0);
 }
 
@@ -1644,24 +1677,39 @@ function openSheet(){
   const rows = document.getElementById("sheetRows");
   rows.innerHTML = "";
   Object.entries(cart).forEach(([key, item])=>{
+    const itemTotalBs = item.qty * item.price * tasaBCV;
+    const itemPriceBs = item.price * tasaBCV;
     const r = document.createElement("div");
     r.className = "row";
     r.innerHTML = `
       <div>
         <div class="name">${item.name}</div>
-        <div class="desc">$${item.price} c/u</div>
+        <div class="desc">$${item.price} (Bs. ${itemPriceBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}) c/u</div>
       </div>
       <div class="qty">
         <button onclick="chg('${key}',-1)">−</button>
         <span>${item.qty}</span>
         <button onclick="chg('${key}',1)">+</button>
-        <div class="price">$${(item.qty * item.price).toFixed(0)}</div>
+        <div class="price" style="display:flex; flex-direction:column; align-items:flex-end; min-width:85px;">
+          <span>$${(item.qty * item.price).toFixed(0)}</span>
+          <span style="font-size:11px; color:var(--muted); font-family:Inter,sans-serif; text-shadow:none; margin-top:2px; font-weight:normal;">
+            Bs. ${itemTotalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+          </span>
+        </div>
       </div>
     `;
     rows.appendChild(r);
   });
   const { total } = totals();
-  document.getElementById("sheetTotal").textContent = `$${total.toFixed(0)}`;
+  const totalBs = total * tasaBCV;
+  document.getElementById("sheetTotal").innerHTML = `
+    <div style="text-align:right;">
+      <span style="display:block; font-size:28px; color:var(--rojo); line-height:1;">$${total.toFixed(0)}</span>
+      <span style="display:block; font-size:16px; color:#444; font-family:Inter,sans-serif; font-weight:700; margin-top:4px;">
+        Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+      </span>
+    </div>
+  `;
   document.getElementById("sheet").classList.add("show");
 }
 
@@ -1697,11 +1745,17 @@ function sendWhatsApp(){
     alert("Agrega productos primero 🍕");
     return;
   }
+  const totalBs = total * tasaBCV;
   let msg = "*Pedido Crumpizza* 🍕\n\n";
   Object.values(cart).forEach(item=>{
-    msg += `• ${item.qty}× ${item.name} — $${(item.qty * item.price).toFixed(0)}\n`;
+    const priceBs = item.price * tasaBCV;
+    const subtotalBs = item.qty * item.price * tasaBCV;
+    msg += `• ${item.qty}× ${item.name}\n`;
+    msg += `  Precio: $${item.price} (Bs. ${priceBs.toFixed(2)}) c/u\n`;
+    msg += `  Subtotal: $${(item.qty * item.price).toFixed(0)} / Bs. ${subtotalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n\n`;
   });
-  msg += `\n*Total a pagar: $${total.toFixed(0)}*\n\n`;
+  msg += `*Total a pagar: $${total.toFixed(0)} / Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}*\n`;
+  msg += `_Tasa Oficial BCV del día: Bs. ${tasaBCV.toFixed(2)}_\n\n`;
   msg += `*Datos de Entrega:*\n`;
   msg += `- *Nombre:* \n`;
   msg += `- *Dirección:* \n`;
@@ -1711,6 +1765,9 @@ function sendWhatsApp(){
   const url = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
   window.open(url, "_blank");
 }
+
+// Iniciar consulta de tasa oficial al cargar
+obtenerTasaBCV();
 </script>
 </body>
 </html>
