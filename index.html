@@ -1333,7 +1333,7 @@
     <p><b>Banco:</b> Bancamiga (0172)</p>
     <p><b>Cédula:</b> V-23796978</p>
     <p><b>Teléfono:</b> 0412-462 48 49</p>
-    <p id="tasaBcvDisplay"><b>Tasa BCV:</b> Bs. 45.19 (oficial)</p>
+    <p id="tasaBcvDisplay"><b>Tasa BCV:</b> Bs. 557.97 (oficial)</p>
   </div>
   
   <div class="copyright">
@@ -1624,14 +1624,14 @@ document.addEventListener("click", (e)=>{
   if(b) addToCart(b);
 });
 
-let tasaBCV = 45.19; // Tasa por defecto
+let tasaBCV = 557.97; // Tasa por defecto
 
 async function obtenerTasaBCV() {
   try {
-    const res = await fetch("https://ve.dolarapi.com/v1/dolares/oficial");
+    const res = await fetch("https://rates.dolarvzla.com/bcv/current.json");
     const data = await res.json();
-    if (data && data.promedio) {
-      tasaBCV = parseFloat(data.promedio);
+    if (data && data.current && data.current.usd) {
+      tasaBCV = parseFloat(data.current.usd);
       console.log("Tasa BCV obtenida:", tasaBCV);
       actualizarTasaDisplay();
       renderCart();
