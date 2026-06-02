@@ -1,0 +1,11 @@
+# Ignorar archivos de Photoshop y comprimidos gigantes
+*.psd
+*.zip
+
+# Ignorar renders e imágenes de referencia temporales
+Enhance_this_exact_photo_into_*.jpeg
+two_thick_pieces_of_a_*.jpeg
+ref/
+*.log
+*.tmp
+

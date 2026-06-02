@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crumpizza — Estrategia + Prompts</title>
+<style>
+  :root{
+    --bg:#0f0b09; --panel:#1a1310; --panel2:#221813; --line:#3a2a20;
+    --txt:#f3e9e0; --muted:#b8a596; --accent:#ff7a1a; --accent2:#ffd23f;
+    --green:#5fd08a; --red:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#2a1a10 0%,var(--bg) 55%);
+    color:var(--txt);font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  h1{font-size:38px;margin:0;letter-spacing:-.5px}
+  h1 .em{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);font-size:15px;margin:4px 0 26px}
+  nav{position:sticky;top:0;background:rgba(15,11,9,.85);backdrop-filter:blur(8px);
+    border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:28px;
+    display:flex;gap:8px;flex-wrap:wrap;z-index:10}
+  nav a{color:var(--muted);text-decoration:none;font-size:13px;padding:6px 12px;border-radius:8px}
+  nav a:hover{background:var(--panel2);color:var(--accent2)}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:18px;
+    padding:26px 28px;margin-bottom:22px;scroll-margin-top:80px}
+  h2{font-size:24px;margin:0 0 16px;display:flex;align-items:center;gap:10px}
+  h2 .pill{font-size:12px;font-weight:600;color:#1a1310;background:var(--accent2);padding:3px 10px;border-radius:20px}
+  h3{font-size:18px;margin:22px 0 8px;color:var(--accent2)}
+  p{margin:8px 0}
+  .muted{color:var(--muted)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:740px){.grid{grid-template-columns:1fr}h1{font-size:30px}}
+  .card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .card.warn{border-color:#7a4a1a;background:#241712}
+  .card.good{border-color:#2c5a3c}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--accent2);font-weight:600}
+  ul{margin:8px 0;padding-left:20px}li{margin:4px 0}
+  .tag{display:inline-block;background:#2a1d16;border:1px solid var(--line);color:var(--accent2);
+    font-size:12px;padding:3px 9px;border-radius:7px;margin:3px 4px 3px 0}
+  .quote{border-left:3px solid var(--accent);background:#231911;padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+  .offer{background:linear-gradient(135deg,#2a1607,#1a1008);border:1px solid #7a4a1a;border-radius:14px;padding:20px;text-align:center}
+  .offer .big{font-size:22px;font-weight:700;color:var(--accent2);margin:6px 0}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  pre{background:#0c0806;border:1px solid var(--line);border-radius:10px;padding:14px;
+    overflow:auto;font-size:12.5px;line-height:1.5;color:#d8cfc6;position:relative}
+  .copybtn{position:absolute;top:8px;right:8px;background:var(--accent);color:#1a1310;border:0;
+    border-radius:7px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer}
+  .copybtn:active{transform:scale(.95)}
+  .ratio{display:inline-block;font-size:11px;font-weight:700;color:#1a1310;background:var(--accent);
+    padding:2px 8px;border-radius:6px;margin:14px 0 4px}
+  .check li{list-style:none;margin-left:-12px}
+  .check li::before{content:"☐ ";color:var(--accent)}
+  .kpi{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0}
+  .kpi div{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;flex:1;min-width:140px}
+  .kpi b{display:block;color:var(--accent2);font-size:20px}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🍕🍔 <span class="em">Crumpizza</span></h1>
+  </header>
+  <div class="sub">@crumpizza · Turmero, Aragua (área Maracay) — La Casona 1, Calle 8 · Precio desde $7 · Lanzamiento Meta Ads 10 días</div>
+
+  <nav>
+    <a href="#budget">💰 Budget</a>
+    <a href="#marca">🎯 Marca</a>
+    <a href="#voz">🗣️ Voz</a>
+    <a href="#campana">📣 Campaña</a>
+    <a href="#oferta">🔥 Oferta</a>
+    <a href="#copy">✍️ Copy</a>
+    <a href="#creativo">🧩 Creativo</a>
+    <a href="#bio">📲 Bio + Overlay</a>
+    <a href="#prompts">🖼️ Prompts imágenes</a>
+    <a href="#organico">📅 Orgánico</a>
+    <a href="#bank">🍕 Prompts UGC iPhone</a>
+    <a href="#plan">🚀 Plan de acción</a>
+    <a href="#checklist">✅ Checklist</a>
+  </nav>
+
+  <!-- BUDGET -->
+  <section id="budget">
+    <h2>💰 Realidad del presupuesto <span class="pill">honestidad brutal</span></h2>
+    <div class="kpi">
+      <div><b>$1/día</b><span class="muted">presupuesto</span></div>
+      <div><b>~$10</b><span class="muted">total 10 días</span></div>
+      <div><b>4 km</b><span class="muted">radio hiperlocal</span></div>
+      <div><b>1-2</b><span class="muted">creativos máx</span></div>
+    </div>
+    <div class="grid">
+      <div class="card good"><b>Lo que SÍ logra:</b>
+        <ul><li>Reconocimiento hiperlocal real (misma gente cercana ve el antojo varias veces)</li>
+        <li>Primer goteo de clientes nuevos cercanos</li>
+        <li>Data: qué creativo gana (hook rate) para escalar</li></ul></div>
+      <div class="card warn"><b>Lo que NO:</b>
+        <ul><li>No inunda pedidos. No es avalancha.</li>
+        <li>Regla: 1 objetivo, 1 oferta, radio chico. Dispersar el dólar = no llega a nadie.</li>
+        <li>Subir a <b>$3-5/día</b> = salto desproporcionado en resultados (recomendado, no bloqueante).</li></ul></div>
+    </div>
+  </section>
+
+  <!-- MARCA -->
+  <section id="marca">
+    <h2>🎯 Análisis de marca</h2>
+    <p>Crumpizza no vende "pizza". Vende <b>2 activos que la competencia local no tiene</b>:</p>
+    <div class="grid">
+      <div class="card"><h3 style="margin-top:0">1. Borde de queso mozzarella</h3>
+        <p class="muted">En TODAS las pizzas. No es extra, es estándar. Casi nadie usa esto como bandera.</p></div>
+      <div class="card"><h3 style="margin-top:0">2. La Pizza Burger 🦸</h3>
+        <p class="muted">Wrap de masa de pizza relleno: <b>carne molida jugosa + maíz + queso fundido + salsa</b>, cortado en piezas paradas, con papas. Único en Venezuela. Combo: 2 + papas + 1 L bebida.</p></div>
+    </div>
+    <h3>Posicionamiento</h3>
+    <p>No compite por precio ni por "italiana premium". Compite por <b>antojo + novedad + abundancia de queso</b>. Terreno emocional: provocar hambre y el "tengo que probar eso".</p>
+    <h3>Audiencia (Maracay)</h3>
+    <p>18-35 años, radio 3-5 km de La Casona. Antojadizos, foodies, grupos, parejas, familias de finde. Piden por WhatsApp/DM. <b>Deciden por la foto — la imagen vende, no el texto.</b></p>
+  </section>
+
+  <!-- VOZ -->
+  <section id="voz">
+    <h2>🗣️ Voz de marca</h2>
+    <p><b>Personalidad:</b> atrevida, antojadiza, descarada, humor venezolano. El pana que te tienta a romper la dieta.</p>
+    <table>
+      <tr><th>Atributo</th><th>Sí ✅</th><th>No ❌</th></tr>
+      <tr><td>Tono</td><td>Provocador, juguetón, directo</td><td>Formal, corporativo</td></tr>
+      <tr><td>Lenguaje</td><td>Venezolano coloquial, sin groserías</td><td>Neutro latino plano</td></tr>
+      <tr><td>Energía</td><td>Hambre, exceso de queso, antojo</td><td>Saludable, light, sofisticado</td></tr>
+      <tr><td>Postura</td><td>"Atrévete", "no te aguantes"</td><td>Pedir permiso, suavizar</td></tr>
+    </table>
+    <h3>Palabras núcleo</h3>
+    <div><span class="tag">queso que se estira</span><span class="tag">borde relleno</span><span class="tag">antojo</span><span class="tag">pizza burger</span><span class="tag">mozzarella</span><span class="tag">muérdela</span><span class="tag">no te lo van a creer</span></div>
+    <h3>Ejemplos de voz</h3>
+    <div class="quote">"Borde de queso en TODAS. No preguntes, solo muerde. 🧀"</div>
+    <div class="quote">"Inventamos la Pizza Burger. Venezuela no estaba lista. 🍕🍔"</div>
+    <div class="quote">"El queso se estira hasta Caracas. Pero solo entregamos en Maracay. 😏"</div>
+  </section>
+
+  <!-- CAMPAÑA -->
+  <section id="campana">
+    <h2>📣 Estrategia de campaña (10 días)</h2>
+    <div class="card warn"><b>Objetivo Meta = Tráfico → perfil de Instagram (@crumpizza).</b> El clic lleva gente cercana al perfil para que vea, siga y conozca la marca. Encaja con la meta = reconocimiento. Los pedidos se capturan en la <b>BIO</b> (link WhatsApp + combo).</div>
+    <h3>Estructura de cuenta</h3>
+<pre>Campaña: Crumpizza Lanzamiento (Tráfico → perfil de Instagram)
+└── 1 Conjunto de anuncios: Turmero Hiperlocal
+    ├── Destino: perfil @crumpizza
+    ├── Ubicación: radio 4 km — La Casona 1, Calle 8, Turmero (NO Maracay centro)
+    ├── Edad: 18-40 · Género: todos
+    ├── Intereses: pizza, comida rápida, delivery, foodie (amplio; el radio filtra)
+    ├── Ubicaciones: Feed + Stories + Reels IG/FB (automático)
+    ├── Presupuesto: $1/día
+    ├── Anuncio 1: Héroe Pizza Burger
+    └── Anuncio 2: Borde de queso</pre>
+    <div class="card warn"><b>¿Conjunto aparte o secuencia? NO.</b> Los 2 creativos van como <b>2 anuncios dentro del MISMO conjunto</b>. Con $1/día, conjuntos separados parten el dólar → ninguno aprende. Meta rota los 2 anuncios solo y concentra el gasto en el que mejor funciona. Día 5 pausas el flojo. (Secuencia no aplica: sin volumen para secuenciar.)</div>
+    <p class="muted"><b>Tradeoff:</b> tráfico-a-perfil = más reconocimiento y seguidores, <b>menos pedidos directos</b>. Alineado con "que nos conozcan". Captura de venta = BIO (combo + wa.me/584226371845).</p>
+    <div class="card warn">⚠️ <b>BIO lista ANTES de prender:</b> foto, "borde de queso en TODAS", combo, link WhatsApp, + posts recientes del producto. El perfil es el destino — tiene que dar ganas de seguir.</div>
+    <p class="muted"><b>Por qué radio chico:</b> con $1/día, abrir toda Maracay diluye el dólar. 4 km = impacta repetidamente a la misma gente cercana → reconocimiento real + son los que SÍ pueden pedir delivery.</p>
+  </section>
+
+  <!-- OFERTA -->
+  <section id="oferta">
+    <h2>🔥 Oferta de lanzamiento <span class="pill">recomendada</span></h2>
+    <p>Reconocimiento solo NO trae clientes en 10 días. Necesitas gancho con urgencia.</p>
+    <div class="offer">
+      <div class="muted">Recomendada — su propio combo</div>
+      <div class="big">Combo Pizza Burger</div>
+      <div>2 Pizza Burgers + papas fritas + 1 L de bebida — precio de lanzamiento, <b>solo 10 días</b></div>
+    </div>
+    <ul>
+      <li>Empuja el <b>producto único</b> → la gente prueba justo lo que nadie más tiene</li>
+      <li>"¿Por qué elegir una si puedes tener las dos?" — el combo de 2 invita a venir acompañado (ticket más alto)</li>
+      <li>El combo ancla precio sin gritar "barato" (no devalúa la marca)</li>
+      <li>Plazo 10 días = <b>urgencia real</b> que justifica pedir ya</li>
+    </ul>
+    <p class="muted"><b>Alternativa:</b> "Borde de queso GRATIS en tu primera pizza" — regalas lo que ya es estándar (costo bajo, valor percibido alto, refuerza diferenciador #1).</p>
+    <div class="card"><b>Mecánica:</b> el anuncio (Tráfico) lleva a link wa.me con mensaje precargado:<br><code>"Quiero el Combo Pizza Burger 🍕🍔"</code> → el cajero cierra el pedido.<br><span class="muted">WhatsApp 0422-637-18-45 ✅ (confirmado). Link: wa.me/584226371845</span></div>
+  </section>
+
+  <!-- COPY -->
+  <section id="copy">
+    <h2>✍️ Copy de anuncios <span class="pill">dar a conocer + confianza</span></h2>
+    <div class="card warn"><b>Enfoque del copy:</b> NO vender duro. <b>Presentar el producto</b> y <b>generar confianza</b>. Tono cálido, honesto, orgulloso local. Cero exageración, cero urgencia falsa. Que la gente diga "quiero conocer eso" y "se ve confiable".</div>
+
+    <h3>Creativo A — Presentación: Pizza Burger</h3>
+    <div class="card">
+      <p><b>Texto principal:</b><br>¿Ya conoces la <b>Pizza Burger</b>? 🍕🍔<br>Es nuestra creación: una hamburguesa hecha de pizza. Masa horneada, carne jugosa, queso fundido y nuestro borde de queso.<br>Hecha fresca, aquí en Maracay. Pásate por el perfil y conócela. 👉 @crumpizza</p>
+      <p class="muted"><b>Titular:</b> La Pizza Burger — solo en Crumpizza<br><b>Descripción:</b> Maracay · hecho fresco · delivery<br><b>Botón:</b> Ver perfil</p>
+    </div>
+
+    <h3>Creativo B — Confianza: Borde de queso</h3>
+    <div class="card">
+      <p><b>Texto principal:</b><br>En Crumpizza, <b>TODAS</b> las pizzas llevan borde de queso. 🧀<br>No es promoción. No es un extra que se paga. Así las hacemos siempre.<br>Masa fresca, ingredientes de verdad. Conócenos. 👉 @crumpizza</p>
+      <p class="muted"><b>Titular:</b> Borde de queso en todas. Siempre.<br><b>Descripción:</b> Maracay · ingredientes reales<br><b>Botón:</b> Ver perfil</p>
+    </div>
+
+    <h3>Creativo C — Marca: quiénes somos</h3>
+    <div class="card">
+      <p><b>Texto principal:</b><br>Somos <b>Crumpizza</b>, de Maracay. 📍<br>Pizza Burger, borde de queso y pizzas hechas frescas todos los días.<br>Date una vuelta por el perfil y mira lo que hacemos. Te va a dar hambre. 😋</p>
+      <p class="muted"><b>Titular:</b> Conoce Crumpizza · Maracay<br><b>Descripción:</b> Pizza burger · borde de queso · delivery<br><b>Botón:</b> Ver perfil</p>
+    </div>
+
+    <h3>🤝 Qué genera confianza (úsalo en perfil y stories)</h3>
+    <ul>
+      <li><b>Mostrar el producto real</b> (fotos honestas, no solo render perfecto)</li>
+      <li><b>Consistencia:</b> "borde de queso en TODAS, siempre" — promesa simple que se cumple</li>
+      <li><b>Reseñas/clientes reales:</b> repostear historias de quien ya probó</li>
+      <li><b>Ubicación y horario claros:</b> dónde están, cómo pedir</li>
+      <li><b>Responder rápido</b> los DMs/WhatsApp (confianza = atención)</li>
+      <li><b>Detrás de cámara:</b> cómo arman la pizza burger, masa fresca, equipo</li>
+    </ul>
+  </section>
+
+  <!-- CREATIVO -->
+  <section id="creativo">
+    <h2>🧩 Anatomía del creativo <span class="pill">qué va en la imagen</span></h2>
+    <div class="card warn"><b>Regla:</b> la foto generada va <b>SIN texto/logo de IA</b> (por eso "no text, no logo" en los prompts). El texto se pone como <b>overlay de diseño</b> (tú, en Canva/Photoshop) encima de la foto. El copy largo va en los <b>campos del anuncio en Meta</b>, NO quemado en la imagen.</div>
+    <div class="grid">
+      <div class="card"><h3 style="margin-top:0">🖼️ EN la imagen (overlay de diseño)</h3>
+        <ul>
+          <li><b>Logo Crumpizza</b> (triángulo rojo "Sabe a Gloria") — esquina superior</li>
+          <li><b>Badge de oferta:</b> "COMBO PIZZA BURGER · 2 + papas + 1L · solo 10 días"</li>
+          <li><b>Gancho producto:</b> "Carne, queso fundido y borde de queso 🧀"</li>
+          <li><b>CTA visual:</b> "Síguenos 👉 @crumpizza" (+ "pide por el link de la bio")</li>
+          <li>Mantener texto ≤20% del área. Usar la <b>zona limpia que dejamos</b> (arriba en 9:16, esquina en 1:1)</li>
+        </ul>
+      </div>
+      <div class="card"><h3 style="margin-top:0">📝 EN Meta (campos del anuncio)</h3>
+        <ul>
+          <li><b>Texto principal:</b> el copy primario (sección Copy ↑)</li>
+          <li><b>Titular:</b> "La Pizza Burger que no existe en ningún otro lado"</li>
+          <li><b>Descripción:</b> "Maracay · delivery · combo 10 días"</li>
+          <li><b>Botón CTA:</b> "Ver perfil" / "Más información" → @crumpizza</li>
+          <li><b>BIO (captura pedidos):</b> combo + link wa.me/584226371845</li>
+        </ul>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:10px"><b>División de trabajo:</b> la foto vende el antojo · el overlay da oferta + CTA · el copy de Meta da contexto y urgencia. No repetir lo mismo en los tres — se refuerzan.</p>
+    <h3>Por formato</h3>
+    <table>
+      <tr><th>Formato</th><th>Overlay sugerido</th></tr>
+      <tr><td><b>9:16</b> Stories/Reels</td><td>Logo + badge oferta ARRIBA (zona oscura/limpia); CTA "Desliza / Pídela 👆" abajo. Sticker animado opcional.</td></tr>
+      <tr><td><b>1:1</b> Feed</td><td>Logo esquina sup; badge oferta esquina inf; CTA va en el texto de Meta (imagen más limpia).</td></tr>
+    </table>
+  </section>
+
+  <!-- BIO -->
+  <section id="bio">
+    <h2>📲 Bio de Instagram + Overlay <span class="pill">listo para copiar</span></h2>
+
+    <h3>Bio de @crumpizza (destino del ad)</h3>
+    <p class="muted">Instagram da ~150 caracteres + 1 link. Pegar tal cual:</p>
+    <pre><button class="copybtn">Copiar</button>🍕🍔 CRUMPIZZA · Sabe a Gloria!
+La Pizza Burger 🇻🇪 — hecha fresca en Maracay
+🧀 Borde de queso en TODAS, siempre
+📍 Maracay · Delivery
+👇 Conócenos / pide aquí</pre>
+    <p class="muted"><b>Campo "sitio web" / link:</b></p>
+    <pre><button class="copybtn">Copiar</button>https://wa.me/584226371845?text=Quiero%20el%20Combo%20Pizza%20Burger%20🍕🍔</pre>
+    <p class="muted"><b>Nombre del perfil (campo nombre, busca por keyword):</b> <code>Crumpizza · Pizza Burger Maracay</code></p>
+
+    <h3>Textos de overlay por creativo</h3>
+    <p class="muted">Van ENCIMA de la foto (Canva). Texto ≤20% del área. La foto es sin texto IA.</p>
+    <div class="grid">
+      <div class="card"><h3 style="margin-top:0">🍔 Héroe — Pizza Burger</h3>
+        <p><b>Arriba (badge):</b> CONOCE LA PIZZA BURGER 🍕🍔</p>
+        <p><b>Gancho:</b> Hamburguesa hecha de pizza. Hecha fresca en Maracay.</p>
+        <p><b>CTA abajo:</b> 👉 @crumpizza</p></div>
+      <div class="card"><h3 style="margin-top:0">🧀 Borde de queso</h3>
+        <p><b>Arriba (badge):</b> BORDE DE QUESO EN TODAS</p>
+        <p><b>Gancho:</b> Así las hacemos siempre. No es extra.</p>
+        <p><b>CTA abajo:</b> 👉 @crumpizza · Maracay</p></div>
+      <div class="card"><h3 style="margin-top:0">🍽️ Plato (producto)</h3>
+        <p><b>Arriba (badge):</b> HECHO FRESCO EN MARACAY</p>
+        <p><b>Gancho:</b> Pizza burger + papas. Ingredientes de verdad.</p>
+        <p><b>CTA abajo:</b> 👉 conócenos @crumpizza</p></div>
+    </div>
+    <p class="muted" style="margin-top:10px"><b>Tip diseño:</b> badge en franja roja (color marca), texto blanco bold, logo arriba. Misma plantilla en los 3 = marca reconocible.</p>
+  </section>
+
+  <!-- PROMPTS -->
+  <section id="prompts">
+    <h2>🖼️ Prompts de imágenes <span class="pill">nano-banana-2</span></h2>
+    <p class="muted"><b>Estilo: foto estudio realista y fiel</b> — luz suave/difusa, fondo neutro claro, colores true-to-life, cálido/familiar/casual. NO restaurante caro, NO fondo oscuro, NO plástico. Producto fiel al real. Variantes con pareja/familia compartiendo. <b>Texto NO quemado</b> (overlay en Meta). Botón "Copiar" en cada prompt.</p>
+
+    <h3>SHOT 1 — Pizza Hamburguesa (HÉROE)</h3>
+    <p class="muted" style="font-size:13px">Producto REAL (verificado en su IG): wrap de masa de pizza horneada relleno de <b>carne molida jugosa + maíz + queso fundido + salsa</b>, cortado en piezas paradas, con papas fritas. Fondo oscuro, humo. Sin texto/logo (se añade después).</p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Hyperrealistic close-up food advertising photograph of a Venezuelan pizza-burger (pizza hamburguesa): a thick golden baked pizza-dough wrap stuffed with juicy seasoned ground beef, melted cheese, sweet yellow corn kernels and tomato sauce, sliced crosswise into thick pieces standing upright on a white plate showing the meaty cheesy corn filling, crispy golden french fries beside it. Rising steam, glossy juicy textures, dark moody background, dramatic warm side lighting, soft bokeh, shallow depth of field, professional food photography, extreme appetite appeal, ultra detailed real texture. No text, no logo. Square 1:1 composition, food centered.</pre>
+    <div class="ratio">3:4</div>
+    <pre><button class="copybtn">Copiar</button>Hyperrealistic food advertising photograph of a Venezuelan pizza-burger (pizza hamburguesa): a thick golden baked pizza-dough wrap stuffed with juicy seasoned ground beef, melted cheese, sweet yellow corn and tomato sauce, sliced crosswise into three thick pieces standing upright on a white plate, cut faces showing the meaty cheesy corn filling, crispy golden french fries beside it. Rising steam, glossy juicy textures, dark moody background, warm dramatic side light, soft bokeh, shallow depth of field, professional food photography, mouthwatering. No text, no logo. Vertical 3:4 composition, food lower two-thirds, dark space at top.</pre>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Hyperrealistic vertical food advertising photograph of a Venezuelan pizza-burger (pizza hamburguesa): a thick golden baked pizza-dough wrap stuffed with juicy seasoned ground beef, melted cheese, sweet yellow corn kernels and tomato sauce, sliced crosswise into three thick pieces standing upright on a white plate, cut faces showing the meaty cheesy corn filling, served beside a pile of crispy golden french fries. Rising steam, glossy juicy textures, dark moody background, dramatic warm side lighting, soft bokeh, shallow depth of field, professional food photography, extreme appetite appeal, ultra detailed real texture. No text, no logo. Tall 9:16 composition, food in lower-center, dark negative space at top.</pre>
+
+    <h3>SHOT 2 — Borde de queso (PULL-SHOT)</h3>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Hyperrealistic macro food photograph of a hand lifting a single slice of pizza with a thick cheese-stuffed crust (mozzarella-filled rim), molten mozzarella cheese stretching in extremely long glossy strings from the crust and toppings, rising steam, pepperoni and bubbling cheese on top, golden crust. Warm dramatic lighting, dark moody background, soft bokeh, shallow depth of field, 100mm macro lens, professional food advertising photography, irresistible craving. Square 1:1, slice rising diagonally from lower right.</pre>
+    <div class="ratio">4:5</div>
+    <pre><button class="copybtn">Copiar</button>Hyperrealistic macro food photograph: a pizza slice being pulled up, revealing a mozzarella cheese-stuffed crust rim, with insanely long stretchy molten cheese strings, steam, glossy melted mozzarella and pepperoni on top, golden crust edge. Warm side light, dark background, bokeh, shallow DOF, 100mm macro, professional food ad photography. Vertical 4:5, slice rising from bottom, dark space at top for text.</pre>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Hyperrealistic vertical macro food photograph of a pizza slice lifted to show a thick mozzarella cheese-filled crust, with long dramatic stretchy cheese strings, steam, melted mozzarella and pepperoni, golden crust. Warm cinematic lighting, dark background, heavy bokeh, shallow depth of field, professional food advertising photo. Tall 9:16, slice in lower-center, large dark negative space at top for Stories text.</pre>
+
+    <h3>SHOT 3 — Mesa de antojo (SPREAD)</h3>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Hyperrealistic top-down flat lay food photograph of a whole pizza with a visible golden cheese-stuffed crust rim next to a pizza burger, both glistening with melted mozzarella, pepperoni and tomato sauce, vibrant saturated colors, rustic dark table surface, scattered fresh basil and a few cheese pulls between them, warm overhead lighting, professional food advertising photography, abundant and mouthwatering. Square 1:1, balanced overhead composition.</pre>
+    <div class="ratio">4:5</div>
+    <pre><button class="copybtn">Copiar</button>Hyperrealistic overhead food photograph of a whole pizza with a golden mozzarella-stuffed crust beside a pizza burger, melted cheese, pepperoni, tomato sauce, saturated appetizing colors, dark rustic table, basil accents, warm light, professional food ad photography, abundant. Vertical 4:5 top-down, both items in lower two-thirds, darker space at top for text.</pre>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Hyperrealistic vertical overhead food photograph of a whole pizza with a cheese-stuffed crust and a pizza burger side by side on a dark rustic table, melted mozzarella, pepperoni, vibrant colors, basil, warm lighting, professional food advertising photo, abundant craving. Tall 9:16, food in lower-center, generous dark negative space at top for Stories/Reels text overlay.</pre>
+
+    <div class="card warn" style="margin-top:16px"><b>Evitar en todas:</b> texto renderizado dentro de la imagen · manos/dedos deformes · look plástico/CGI · platos sucios alrededor. <br><b>Orden recomendado:</b> Shot 1 (4:5) → Shot 1 (9:16) → Shot 2 (4:5) → Shot 2 (9:16) → 1:1 de respaldo → Shot 3.</div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <!-- ORGANICO -->
+  <section id="organico">
+    <h2>📅 Contenido orgánico <span class="pill">acompaña los ads</span></h2>
+    <div class="card warn"><b>Por qué importa:</b> el ad lleva al perfil. Si el perfil está muerto o vacío, el clic se pierde. El orgánico hace que al llegar la gente <b>siga, confíe y le dé hambre</b>. Ads = alcance · Orgánico = confianza + comunidad.</div>
+
+    <h3>5 pilares de contenido</h3>
+    <table>
+      <tr><th>Pilar</th><th>Qué es</th><th>Ejemplos</th></tr>
+      <tr><td>🍕 <b>Antojo</b></td><td>Producto que da hambre</td><td>Cheese pull del borde, corte de la pizza burger, vapor, primer plano</td></tr>
+      <tr><td>🤝 <b>Confianza / detrás de cámara</b></td><td>Cómo se hace, quiénes son</td><td>Masa fresca, armando la pizza burger, el horno, el equipo</td></tr>
+      <tr><td>⭐ <b>Prueba social</b></td><td>Clientes reales</td><td>Repost de historias, reseñas, "cliente del día", reacciones</td></tr>
+      <tr><td>📍 <b>Local / comunidad</b></td><td>Turmero, cercanía</td><td>Ubicación, delivery, "los de Turmero ya saben", responder comentarios</td></tr>
+      <tr><td>🔥 <b>Oferta suave</b></td><td>Razón para pedir hoy</td><td>Combo desde $7, "pide la tuya", horario, cómo ordenar</td></tr>
+    </table>
+
+    <h3>Cadencia — basada en imágenes (sostenible para 1 persona)</h3>
+    <div class="kpi">
+      <div><b>1/día</b><span class="muted">Story (foto)</span></div>
+      <div><b>4-5/sem</b><span class="muted">Feed (foto/carrusel)</span></div>
+      <div><b>1/sem</b><span class="muted">Reel (opcional)</span></div>
+    </div>
+    <p class="muted">Enfoque <b>imagen</b>: fotos del producto + carruseles. El feed es la vitrina que ve el visitante del ad. Reel solo si surge fácil — no obligatorio.</p>
+
+    <h3>Banco de posts de imagen (genera en Flow / fotografía real)</h3>
+    <table>
+      <tr><th>Tipo</th><th>Imagen</th><th>Caption corto</th></tr>
+      <tr><td><b>Producto héroe</b></td><td>Pizza Burger cortada, vapor, plato + papas</td><td>"¿Ya conoces la Pizza Burger? 🍕🍔 Hecha fresca en Turmero."</td></tr>
+      <tr><td><b>Borde de queso</b></td><td>Pizza en caja, borde dorado primer plano</td><td>"Borde de queso en TODAS. Siempre. 🧀"</td></tr>
+      <tr><td><b>Detalle macro</b></td><td>Close-up del relleno / queso estirado (foto fija)</td><td>"Mira ese relleno 👀 carne, queso y maíz."</td></tr>
+      <tr><td><b>Carrusel menú</b></td><td>3-5 fotos: pizza burger, borde queso, combo, papas</td><td>"Desliza y elige tu antojo 👉 desde $7."</td></tr>
+      <tr><td><b>Detrás de cámara</b></td><td>Foto de la masa fresca / armando / horno</td><td>"Así nace cada Crumpizza. Masa fresca del día."</td></tr>
+      <tr><td><b>Prueba social</b></td><td>Repost foto de cliente / captura de reseña</td><td>"Gracias por la visita 🙌 #Turmero"</td></tr>
+      <tr><td><b>Combo / oferta</b></td><td>Combo completo (2 + papas + bebida)</td><td>"El Combo Pizza Burger. Para compartir (o no 😏). Desde $7."</td></tr>
+      <tr><td><b>Local / ubicación</b></td><td>Foto del local / fachada / mapa</td><td>"📍 La Casona 1, Calle 8 - Turmero. Te esperamos."</td></tr>
+    </table>
+    <p class="muted"><b>Tip:</b> misma estética en todo el feed (caja kraft, papel ajedrez, fondo cálido, vapor) = perfil reconocible y profesional al primer vistazo.</p>
+
+    <h3>Highlights del perfil (fijar ya)</h3>
+    <div><span class="tag">🍔 Pizza Burger</span><span class="tag">🧀 Borde de queso</span><span class="tag">📖 Menú</span><span class="tag">🛵 Cómo pedir</span><span class="tag">⭐ Reseñas</span><span class="tag">📍 Ubicación</span></div>
+
+    <h3>Calendario 10 días (alineado con los ads)</h3>
+    <table>
+      <tr><th>Día</th><th>Feed (imagen)</th><th>Stories</th></tr>
+      <tr><td><b>1</b> (prende ad)</td><td>Pizza Burger héroe (presentación)</td><td>"Ya salió" + encuesta "¿la probaste?"</td></tr>
+      <tr><td><b>2</b></td><td>Detalle macro (relleno/queso)</td><td>Detrás de cámara: armando</td></tr>
+      <tr><td><b>3</b></td><td>Borde de queso (caja, primer plano)</td><td>Repost cliente / reseña</td></tr>
+      <tr><td><b>4</b></td><td>—</td><td>Ubicación + cómo pedir</td></tr>
+      <tr><td><b>5</b></td><td>Carrusel: menú/variedad (desde $7)</td><td>Caja de pregunta "¿qué quieres ver?"</td></tr>
+      <tr><td><b>6</b></td><td>Detrás de cámara (masa fresca)</td><td>Combo desde $7</td></tr>
+      <tr><td><b>7</b></td><td>Prueba social (cliente/reseña)</td><td>Reacción cliente</td></tr>
+      <tr><td><b>8</b></td><td>Combo completo</td><td>Detrás de cámara</td></tr>
+      <tr><td><b>9</b></td><td>Pizza Burger (otro ángulo)</td><td>Cuenta regresiva oferta</td></tr>
+      <tr><td><b>10</b></td><td>"Gracias Turmero" + local/ubicación</td><td>Reseñas acumuladas</td></tr>
+    </table>
+    <p class="muted">~5 posts de feed + stories diarias en 10 días. Reel solo si surge fácil (cheese pull / corte) — opcional.</p>
+
+    <h3>Captions de ejemplo (tono confianza)</h3>
+    <div class="quote">"Así arrancamos cada pizza: masa fresca, hecha el mismo día. Por eso el borde queda así 🧀 #Turmero"</div>
+    <div class="quote">"¿Ya conoces la Pizza Burger? La inventamos aquí en Turmero. Pizza + hamburguesa en un solo bocado 🍕🍔"</div>
+    <div class="quote">"Gracias a todos los que ya pasaron por Crumpizza esta semana 🙌 Esto apenas empieza."</div>
+
+    <h3>Hashtags (locales + producto)</h3>
+    <div><span class="tag">#Turmero</span><span class="tag">#Maracay</span><span class="tag">#Aragua</span><span class="tag">#PizzaVenezuela</span><span class="tag">#PizzaBurger</span><span class="tag">#BordeDeQueso</span><span class="tag">#DeliveryTurmero</span><span class="tag">#ComidaMaracay</span><span class="tag">#Crumpizza</span></div>
+
+    <h3>Reglas de engagement (confianza = atención)</h3>
+    <ul>
+      <li>Responder TODO comentario y DM rápido (&lt; 1h en horario)</li>
+      <li>Repostear cada historia donde te etiqueten (incentiva más etiquetas)</li>
+      <li>Usar stickers (encuesta, pregunta, cuenta regresiva) → más interacción → más alcance</li>
+      <li>Pin de los 3 mejores posts arriba del feed (que el visitante del ad vea lo mejor primero)</li>
+    </ul>
+  </section>
+
+  <!-- BANK UGC iPhone -->
+  <section id="bank">
+    <h2>🍕 Banco de Prompts UGC <span class="pill">iPhone · brand-fiel</span></h2>
+    <div class="card warn"><b>Estilo "cliente real":</b> foto iPhone, mesa palet pino claro, pizza en bandeja metálica negra (in-house) o caja kraft (delivery), 2L Coca/Glup, vasos plásticos, servilletero cromado, patio Turmero pared blanca desconchada con reja, familias venezolanas mestizas reales. <b>NO</b> estudio, <b>NO</b> CGI, <b>NO</b> plástico. Generar en Flow (Nano Banana 2) x4. Tip: sube 1 foto real cliente como referencia antes del prompt = consistencia entre tomas.</div>
+
+    <h3>Reglas brand (ya incluidas en todos los prompts)</h3>
+    <ul>
+      <li><b>Toppings firma:</b> jamón rosado venezolano + maíz dulce + queso mozzarella con manchas doradas + borde de queso. NO pepperoni.</li>
+      <li><b>Empaque:</b> bandeja metálica negra redonda in-house / caja kraft cruda delivery (papel blanco simple, NO ajedrez).</li>
+      <li><b>Mesa:</b> picnic de palet pino claro sin barnizar, tornillos visibles.</li>
+      <li><b>Bebidas:</b> 2L Coca-Cola o Glup, vasos plásticos transparentes, vasos vidrio con hielo.</li>
+      <li><b>Ambiente:</b> patio Turmero, pared blanca/gris desconchada, ventana reja metálica blanca, concreto.</li>
+      <li><b>Gente:</b> venezolanos mestizos reales, piel natural, sudor/brillo, ropa casual.</li>
+      <li><b>Cámara:</b> iPhone, ángulo casual ligeramente ladeado, real candid moment.</li>
+    </ul>
+
+    <h3 style="color:var(--accent)">A · Cliente real comiendo <span class="muted" style="font-size:13px">(prioridad — los que más venden)</span></h3>
+
+    <p class="muted"><b>A1 — Pareja venezolana selfie patio día</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, real Venezuelan young couple (mestizos, natural skin, casual clothes — white t-shirt and striped tee), sitting close together on a wooden picnic palet table in an outdoor humble pizzeria patio in Turmero, smiling at camera selfie style, the man giving thumbs up, a black metal round tray with a Venezuelan pizza topped with pink ham and sweet corn between them, two glass cups with ice and cola, a 2L Glup soda bottle, smartphones on the table, white concrete wall background with metal grid window, natural afternoon daylight. Slightly tilted casual framing, harsh real phone photo look, natural skin imperfections, true-to-life colors, super detailed, NOT studio, NOT CGI, subtle grain, authentic Venezuelan small business customer moment. No text, no logo.</pre>
+
+    <p class="muted"><b>A2 — Dos amigas mesa noche flash</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot with hard frontal flash, two real Venezuelan young women friends (mestizas, one with dark hair, one with curly red-tinted hair, natural skin with real imperfections and flash glare on cheeks and forehead), sitting at a wooden picnic palet table on a humble outdoor pizzeria patio at night in Turmero, one holding her phone, the other looking up to camera with subtle smile, a black metal tray with a Venezuelan pizza (ham + corn topping) in front, 2L cola bottle, plastic cup, small kraft napkin packet, dark wet pavement street visible behind, sharp flash shadows. Slightly tilted casual amateur framing, harsh flash light, true-to-life colors, super detailed, NOT studio, NOT CGI, NOT glossy, subtle digital grain, authentic Venezuelan small business UGC. No text, no logo.</pre>
+
+    <p class="muted"><b>A3 — Hombre gorra VZLA con caja</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, real Venezuelan man (mestizo, beard stubble, dark hair, wearing a black snapback cap with "VZLA" and Venezuelan flag, red t-shirt), sitting at a wooden picnic palet table inside a humble pizzeria, looking down at an open plain brown kraft pizza box revealing a freshly baked pizza with pink Venezuelan ham, sweet corn and golden melted mozzarella on a thick golden crust, holding a small white napkin, dark 2L cola bottle beside, blurred grill or kitchen background. Slightly tilted casual amateur framing, warm dim indoor tube light, natural skin imperfections, super detailed real food texture, NOT studio, NOT CGI, subtle grain, authentic Venezuelan emprendimiento. No text, no logo.</pre>
+
+    <p class="muted"><b>A4 — Familia grande compartiendo noche</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot from a slightly elevated angle, real Venezuelan family multigenerational (mom, grandma with tank top, several young girls and kids, mestizos, natural skin) crowded around a wooden picnic palet table on a humble outdoor pizzeria patio at night in Turmero, all eating slices of Venezuelan pizza (ham + corn topping) with their hands, candid genuine expressions, two big pizzas — one on a black metal tray and another on a wooden board — a 2L Coca-Cola bottle, a 2L red and white Coleman cooler on table, plastic cups, metal napkin holder, paper napkins scattered, harsh phone flash creating sharp shadows and bright skin highlights. Slightly tilted casual amateur framing, super detailed, NOT studio, NOT CGI, NOT glossy, subtle grain, authentic Venezuelan family gathering UGC. No text, no logo.</pre>
+
+    <p class="muted"><b>A5 — Pareja madura abrazo día</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, real Venezuelan adult couple in their 30s (man in white t-shirt giving thumbs up, woman in black-and-white striped t-shirt holding a pizza slice, mestizos, natural skin, friendly smiles), sitting close together at a wooden picnic palet table on a humble outdoor pizzeria patio in Turmero during daytime, a Venezuelan pizza with pink ham, sweet corn and olives on a black metal round tray in front, two glass cups with cold cola and ice, 2L Glup soda bottle, two smartphones on table, plain concrete wall and metal sliding gate background, soft natural daylight. Slightly tilted casual amateur framing, natural skin imperfections, true-to-life colors, super detailed, NOT studio, NOT CGI, subtle grain, authentic Venezuelan small business customer moment. No text, no logo.</pre>
+
+    <p class="muted"><b>A6 — Grupo amigos brindando</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, group of 4 real Venezuelan young friends (mestizos, mixed gender, natural skin, casual clothes), seated around a wooden picnic palet table at a humble outdoor pizzeria in Turmero at golden hour, raising plastic cups full of cola in a toast, a big Venezuelan pizza on black metal tray in the center with ham and corn, 2L cola bottle, metal napkin holder, smartphones on table, candid laughter. Slightly tilted casual amateur framing, natural lighting with slight harsh sun shadows, real skin imperfections, super detailed, NOT studio, NOT CGI, subtle grain, authentic Venezuelan UGC. No text, no logo.</pre>
+
+    <p class="muted"><b>A7 — Niño feliz mordiendo slice</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot with hard frontal flash, real Venezuelan kid (mestizo, around 8 years old, messy dark hair, natural skin) holding a big slice of Venezuelan pizza with both hands, taking a big bite, cheese strings, ham and corn visible, sitting at a wooden picnic palet table outdoor humble pizzeria at night in Turmero, parent's blurred arm beside, 2L cola bottle and plastic cup on table, sharp flash shadows. Slightly tilted casual amateur framing, natural kid skin and messy expression, super detailed, NOT studio, NOT CGI, subtle grain, authentic Venezuelan family UGC. No text, no logo.</pre>
+
+    <p class="muted"><b>A8 — Selfie solo cliente</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone selfie, single real Venezuelan young man (mestizo, casual t-shirt, natural skin), sitting alone at a wooden picnic palet table in a humble outdoor pizzeria patio in Turmero, smiling holding up a slice of Venezuelan pizza (ham + corn) toward the camera with cheese pull, a black metal tray with the rest of the pizza, 2L Coca-Cola bottle, plastic cup, white wall with metal grid window background, natural late afternoon light. Slightly tilted casual selfie framing, real skin imperfections, super detailed, NOT studio, NOT CGI, subtle grain, authentic Venezuelan customer UGC. No text, no logo.</pre>
+
+    <h3 style="color:var(--accent)">B · Producto en mesa real (sin gente)</h3>
+
+    <p class="muted"><b>B1 — Pizza en bandeja sobre palet día</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, top-down slightly tilted view of a freshly baked Venezuelan pizza on a black round metal tray, toppings pink Venezuelan ham slices, sweet yellow corn kernels, melted mozzarella with golden char spots, thick golden crust, sitting on a light pine wood picnic palet table with visible screws, beside it two glass cups with cold cola and ice, a 2L Glup soda bottle, smartphone, metal napkin holder, white concrete wall background, natural afternoon daylight. Slightly tilted casual amateur framing, true-to-life colors, super detailed real food texture, NOT studio, NOT CGI, subtle grain, authentic Venezuelan small business. No text, no logo.</pre>
+
+    <p class="muted"><b>B2 — Pizza en caja kraft mesa palet</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, slightly tilted view of an open plain brown kraft cardboard pizza box on a light pine wood picnic palet table at a humble outdoor pizzeria in Turmero, a Venezuelan pizza inside with pink ham, sweet corn, golden melted mozzarella and a thick golden crust on plain white parchment paper, beside it a 2L Coca-Cola bottle and plastic cup with ice, natural afternoon daylight or warm phone flash light. Casual amateur framing, real food texture, super detailed, NOT studio, NOT CGI, subtle grain. No text, no logo.</pre>
+
+    <p class="muted"><b>B3 — Combo entero mesa cliente</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, top-down of a wooden picnic palet table at humble outdoor pizzeria in Turmero, full Crumpizza combo: a black metal tray with a Venezuelan pizza (ham + corn), two white plates with pizza-burger pieces standing upright with fries, a 2L Coca-Cola bottle, plastic cups with ice, metal napkin holder, smartphones and keys on table edge, natural daylight or warm phone flash. Slightly tilted casual amateur framing, super detailed real food texture, NOT studio, NOT CGI, subtle grain, authentic Venezuelan emprendimiento. No text, no logo.</pre>
+
+    <p class="muted"><b>B4 — Pizza burger plato mesa palet</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, slightly elevated view of a simple white plate on a light pine wood picnic palet table, three thick upright pieces of Crumpizza pizza-burger showing the juicy meaty filling (ground beef, melted cheese, sweet corn, tomato sauce), crispy golden fries beside, 2L Glup soda bottle and plastic cup behind, natural daylight or warm flash light, plain humble patio background. Casual amateur framing, real food texture, super detailed, NOT studio, NOT CGI, subtle grain. No text, no logo.</pre>
+
+    <p class="muted"><b>B5 — Slice solitaria (last slice vibe)</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, single remaining slice of Venezuelan pizza (ham + corn) on a black metal round tray on a wooden picnic palet table, crumbs around, empty plastic cups, half-empty 2L cola bottle, crumpled napkins, evening warm light at humble outdoor pizzeria. Casual amateur framing, true-to-life colors, super detailed, NOT studio, NOT CGI, subtle grain, authentic "end of the meal" moment. No text, no logo.</pre>
+
+    <h3 style="color:var(--accent)">C · Behind the scenes (cocinero/local)</h3>
+
+    <p class="muted"><b>C1 — Cocinero con caja mostrando producto</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, real Venezuelan pizzero (mestizo man wearing black "VZLA Venezuela" snapback cap, red t-shirt, beard stubble), looking down at an open brown kraft pizza box revealing freshly baked Venezuelan pizza with ham, corn, golden melted mozzarella, holding a small napkin, behind a grill or kitchen counter, warm dim indoor tube lighting, dark 2L cola bottle visible. Slightly tilted casual amateur framing, natural skin with imperfections, super detailed, NOT studio, NOT CGI, subtle grain, authentic Venezuelan small business. No text, no logo.</pre>
+
+    <p class="muted"><b>C2 — Cocinero estirando masa</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, real Venezuelan pizzero (mestizo man, apron, casual t-shirt) stretching fresh pizza dough by hand on a stainless steel kitchen counter inside a small humble pizzeria, simple bowls of shredded mozzarella, pink ham slices, sweet corn kernels nearby, warm everyday kitchen tube lighting, candid behind-the-scenes. Casual amateur framing, natural skin imperfections, super detailed, NOT studio, NOT CGI, subtle grain. No text, no logo. Vertical, subject lower-center.</pre>
+
+    <p class="muted"><b>C3 — Pizza saliendo del horno</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, real Venezuelan pizzero using a wooden peel to pull a freshly baked Crumpizza pizza out of a hot oven, bubbling melted cheese with ham and corn, golden crust, glowing warm orange oven light on his face, candid action shot, small humble pizzeria kitchen background. Casual amateur framing, natural skin, super detailed, NOT studio, NOT CGI, subtle grain. No text, no logo. Vertical.</pre>
+
+    <p class="muted"><b>C4 — Cajas kraft apiladas listas delivery</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, stack of 5-6 plain brown kraft pizza boxes on a simple wooden counter inside a humble Venezuelan pizzeria, plastic delivery bag beside, ticket on top, warm everyday tube lighting, slight steam from top box, plain wall background with simple printed menu. Casual amateur framing, super detailed real texture, NOT studio, NOT CGI, subtle grain. No text, no logo.</pre>
+
+    <p class="muted"><b>C5 — Ingredientes en mesa prep</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, top-down on a stainless steel prep table inside humble Venezuelan pizzeria kitchen, simple white bowls of: shredded mozzarella, pink Venezuelan ham slices, sweet yellow corn kernels, red tomato sauce, a ball of raw pizza dough on floured surface, warm everyday tube lighting. Casual amateur framing, real worn metal, super detailed real texture, NOT studio, NOT CGI, subtle grain. No text, no logo.</pre>
+
+    <h3 style="color:var(--accent)">D · Local / Ambiente Turmero</h3>
+
+    <p class="muted"><b>D1 — Mesa palet vacía esperando</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, empty wooden picnic palet table with visible screws and rough light pine wood, two integrated benches, a metal napkin holder and a small ketchup bottle on top, on a humble outdoor pizzeria patio in Turmero, white concrete wall with metal grid window background, natural late afternoon daylight casting harsh shadows. Casual amateur framing, super detailed, NOT studio, NOT CGI, subtle grain, authentic Venezuelan small business. No text, no logo.</pre>
+
+    <p class="muted"><b>D2 — Patio exterior noche local</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot at night, wide shot of humble outdoor pizzeria patio in Turmero, two or three wooden picnic palet tables with customers eating, motorcycles parked beside, warm cheap LED tube lights overhead casting yellow glow, plain concrete walls, candid atmosphere. Casual amateur framing, super detailed, NOT studio, NOT CGI, subtle grain. No text, no logo. Vertical.</pre>
+
+    <p class="muted"><b>D3 — Fachada local día</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot daytime, exterior of small humble Venezuelan pizzeria storefront in Turmero, simple signage with red brand color, concrete street with motorcycles parked, plain neighborhood buildings around, natural sunlight. Casual amateur framing, super detailed real urban Venezuelan texture, NOT studio, NOT CGI, subtle grain. No text, no logo. Vertical.</pre>
+
+    <p class="muted"><b>D4 — Detalle mesa con utensilios típicos</b></p>
+    <div class="ratio">1:1</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot, close-up on wooden picnic palet table surface showing a metal chrome napkin holder, transparent plastic cups, small ketchup and hot sauce bottles, a smartphone face down, a colorful Rubik's cube and a pink water bottle, soft natural daylight, plain humble patio background. Casual amateur framing, super detailed real texture, NOT studio, NOT CGI, subtle grain. No text, no logo.</pre>
+
+    <h3 style="color:var(--accent)">E · Reels / Stories (9:16)</h3>
+
+    <p class="muted"><b>E1 — POV abriendo caja delivery casa</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot vertical POV first person, two real Venezuelan hands opening a brown kraft Crumpizza pizza box on a household table at home, lid lifting to reveal the steaming Venezuelan pizza with ham, corn and golden melted mozzarella on plain white parchment paper, warm home dining lighting, blurred household background. Casual amateur framing, super detailed, NOT studio, NOT CGI, subtle grain. No text, no logo. Vertical.</pre>
+
+    <p class="muted"><b>E2 — POV primer bocado</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone selfie POV vertical, real Venezuelan hand bringing a slice of Crumpizza pizza (ham + corn) toward camera mouth, cheese pull strings, blurred wooden palet table with 2L cola bottle and metal napkin holder below, humble outdoor pizzeria patio background, harsh phone flash or warm dim light. Casual amateur framing, slightly motion blurred, super detailed, NOT studio, NOT CGI, subtle grain. No text, no logo. Vertical.</pre>
+
+    <p class="muted"><b>E3 — Reveal caja delivery moto</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot vertical, real Venezuelan delivery driver (mestizo young man, casual clothes, helmet on table beside) handing two stacked brown kraft Crumpizza pizza boxes to a customer at a residential doorway in Turmero area, parked motorcycle visible blurred behind, warm late afternoon daylight, candid moment. Casual amateur framing, natural skin, super detailed, NOT studio, NOT CGI, subtle grain. No text, no logo. Vertical.</pre>
+
+    <p class="muted"><b>E4 — Brindis vertical mesa</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot vertical, several real Venezuelan hands raising transparent plastic cups full of cola in a toast above a wooden picnic palet table with a Venezuelan pizza on black metal tray below, 2L Coca-Cola bottle, candid happy laughter, harsh phone flash or warm evening light, humble outdoor pizzeria patio. Casual amateur framing, super detailed, NOT studio, NOT CGI, subtle grain. No text, no logo. Vertical.</pre>
+
+    <p class="muted"><b>E5 — Cheese pull cliente real</b></p>
+    <div class="ratio">9:16</div>
+    <pre><button class="copybtn">Copiar</button>Authentic iPhone phone snapshot vertical close-up, real Venezuelan hand lifting a slice of pizza from a black metal round tray on a wooden picnic palet table, long stretchy melted mozzarella cheese pull, ham and corn toppings visible, golden crust, steam, 2L cola bottle blurred behind, harsh phone flash creating bright highlights and sharp shadows. Casual amateur framing, super detailed real food texture, NOT studio, NOT CGI, NOT glossy ad, subtle grain. No text, no logo. Vertical, slice center.</pre>
+
+    <h3 style="color:var(--accent)">Captions de apoyo (mix & match)</h3>
+    <div class="quote">"Así se come Crumpizza 🔥 <b>Sabe a Gloria.</b>"</div>
+    <div class="quote">"Mesa lista, gente lista 👌🇻🇪"</div>
+    <div class="quote">"Borde de queso en TODAS, siempre 🧀"</div>
+    <div class="quote">"Para los que saben — jamón, maíz y queso pa' rato."</div>
+    <div class="quote">"Plan domingo familia 🍕👨‍👩‍👧"</div>
+    <div class="quote">"Etiqueta a esa persona que se viene contigo 👇"</div>
+    <div class="quote">"📍 La Casona 1, Calle 8, Turmero · Desde $7 · WhatsApp 0422-637-18-45"</div>
+
+    <h3 style="color:var(--accent)">Triggers maestros (si Flow falla)</h3>
+    <ul>
+      <li><b>Rostro europeo:</b> añade <code>Venezuelan mestizo features, Caribbean Latin American, warm brown skin, dark brown eyes</code></li>
+      <li><b>Comida plástica:</b> añade <code>real cooked pizza, edible appearance, natural baked imperfections, slightly uneven</code></li>
+      <li><b>Fondo lujoso:</b> añade <code>humble cheap small business, unfinished concrete wall, plastic chairs, no decor</code></li>
+      <li><b>Luz estudio:</b> añade <code>harsh phone flash with sharp shadows OR flat outdoor daylight, NOT softbox, NOT cinematic</code></li>
+      <li><b>Consistencia:</b> sube 1 foto real del cliente como referencia en Flow (drag & drop antes del prompt)</li>
+    </ul>
+
+    <div class="card good" style="margin-top:14px"><b>Flujo:</b> Flow → nuevo proyecto → sube foto ref → ratio (1:1 o 9:16) → pega prompt → x4 → elige → descarga → overlay logo CRUMPIZZA + "Sabe a Gloria!" si quieres.</div>
+  </section>
+
+  <!-- PLAN -->
+  <section id="plan">
+    <h2>🚀 Plan de acción <span class="pill">lanzamiento 10 días</span></h2>
+    <div class="card"><b>Objetivo madre:</b> que Maracay conozca Crumpizza (reconocimiento). El ad de Tráfico lleva al <b>perfil de IG</b> para que vean, sigan y conozcan. La marca se queda en la cabeza; los pedidos (vía link de la bio) son el bonus.</div>
+
+    <h3>Antes de prender (Día 0 — esta semana) ⚠️ crítico</h3>
+    <ul class="check">
+      <li><b>BIO lista</b> (es el destino del ad): foto, "borde de queso en TODAS", combo, link wa.me/584226371845</li>
+      <li><b>Feed con posts recientes del producto</b> — que dé ganas de seguir al llegar</li>
+      <li>Elegir fotos ganadoras en Flow (héroe pizza burger + borde de queso)</li>
+      <li>Montar overlay: logo + "Combo Pizza Burger 10 días" + "Síguenos @crumpizza"</li>
+      <li>WhatsApp Business listo: contesta en &lt; 5 min, sabe el precio del combo</li>
+    </ul>
+
+    <h3>Día 1 — Prender campaña</h3>
+    <ul class="check">
+      <li>Meta: campaña <b>Tráfico → perfil de Instagram @crumpizza</b></li>
+      <li>1 conjunto: radio 4 km de Av Intercomunal, 18-40, $1/día</li>
+      <li>Subir 2 creativos (héroe + borde). Publicar.</li>
+      <li>Orgánico mismo día: postear el héroe en feed + story con "ya salió"</li>
+    </ul>
+
+    <h3>Día 1-4 — Alimentar reconocimiento</h3>
+    <ul class="check">
+      <li>1 story diaria mostrando el producto (antojo, borde de queso estirándose, combo)</li>
+      <li>Responder TODO DM/WhatsApp rápido y con buena onda</li>
+      <li>Pedir a cada cliente que etiquete a @crumpizza (boca a boca gratis)</li>
+      <li>No tocar la campaña todavía (dejar que Meta aprenda)</li>
+    </ul>
+
+    <h3>Día 5 — Primer corte</h3>
+    <ul class="check">
+      <li>Ver qué creativo tiene mejor <b>hook rate</b> (más clics/atención)</li>
+      <li>Pausar el más flojo, dejar correr el ganador</li>
+      <li>Si hay presupuesto, subir a $3-5/día solo en el ganador</li>
+    </ul>
+
+    <h3>Día 6-9 — Empujar el ganador</h3>
+    <ul class="check">
+      <li>Reforzar el creativo que gana; sacar 1 variante nueva del mismo ángulo</li>
+      <li>Contenido orgánico constante (reels cortos del producto)</li>
+      <li>Seguir contestando y cerrando pedidos por WhatsApp</li>
+    </ul>
+
+    <h3>Día 10 — Medir y decidir</h3>
+    <ul class="check">
+      <li>Números: alcance, clics, mensajes recibidos, pedidos cerrados</li>
+      <li>¿La gente ya reconoce "Pizza Burger / borde de queso"? (preguntar en DMs)</li>
+      <li>Decidir: subir presupuesto, nuevos creativos, o sumar objetivo de Mensajes</li>
+    </ul>
+
+    <div class="card good" style="margin-top:12px"><b>Señal de éxito (awareness, $1/día):</b> gente cercana que escribe "vi su pizza burger", aumento de seguidores/DMs, primeros pedidos nuevos. NO esperar avalancha — esperar que <b>empiecen a conocerte</b>.</div>
+  </section>
+
+  <section id="checklist">
+    <h2>✅ Checklist de lanzamiento</h2>
+    <ul class="check">
+      <li>WhatsApp Business con mensaje precargado del combo</li>
+      <li>Cuenta publicitaria / Pixel conectada a la página de Crumpizza</li>
+      <li>Oferta definida y comunicada al personal (qué es el "Combo Bienvenida")</li>
+      <li>2 creativos finales (héroe + borde) en 1:1, 3:4, 9:16</li>
+      <li>Campaña: Tráfico → perfil de Instagram @crumpizza, radio 4 km, $1/día</li>
+      <li>BIO lista (destino del ad): combo + link wa.me/584226371845 + posts recientes</li>
+      <li>Bio de Instagram: zona, horario, "borde de queso en todas", link WhatsApp</li>
+      <li>Plan de respuesta DM/WhatsApp (quién contesta, &lt; 5 min)</li>
+      <li>Medir diario: mensajes, hook rate por creativo, pedidos cerrados</li>
+    </ul>
+  </section>
+
+  <footer>Crumpizza · estrategia generada para Meta Ads · Maracay 2026</footer>
+</div>
+
+<script>
+document.querySelectorAll('.copybtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const t=b.parentElement.innerText.replace(/^Copiar\n?/,'').trim();
+    navigator.clipboard.writeText(t).then(()=>{b.textContent='✓ Copiado';setTimeout(()=>b.textContent='Copiar',1400)});
+  });
+});
+</script>
+</body>
+</html>
